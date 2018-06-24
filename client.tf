@@ -33,7 +33,7 @@ data "aws_ami" "nomad_ami" {
 
 // We launch Vault into an ASG so that it can properly bring them up for us.
 resource "aws_autoscaling_group" "nomad-clients" {
-  name                      = "nomad clients - ${aws_launch_configuration.nomad.name}"
+  name                      = "nomad clients - ${aws_launch_configuration.nomad-client.name}"
   launch_configuration      = "${aws_launch_configuration.nomad.name}"
   availability_zones        = ["${var.availability_zone}"]
   min_size                  = "${var.clients}"
@@ -67,5 +67,5 @@ resource "aws_launch_configuration" "nomad-clients" {
   instance_type   = "${var.instance_type}"
   key_name        = "${var.key_name}"
   security_groups = ["${aws_security_group.nomad.id}"]
-  user_data       = "${template_file.install.rendered}"
+  user_data       = "${template_file.install-client.rendered}"
 }

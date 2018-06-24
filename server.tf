@@ -1,4 +1,4 @@
-resource "template_file" "install-client" {
+resource "template_file" "install-server" {
   template = "${file("${path.module}/scripts/install.sh.tpl")}"
 
   vars {
@@ -33,7 +33,7 @@ data "aws_ami" "nomad_ami" {
 
 // We launch Vault into an ASG so that it can properly bring them up for us.
 resource "aws_autoscaling_group" "nomad-servers" {
-  name                      = "nomad servers - ${aws_launch_configuration.nomad.name}"
+  name                      = "nomad servers - ${aws_launch_configuration.nomad-server.name}"
   launch_configuration      = "${aws_launch_configuration.nomad-server.name}"
   availability_zones        = ["${var.availability_zone}"]
   min_size                  = "${var.servers}"
@@ -62,10 +62,10 @@ resource "aws_autoscaling_group" "nomad-servers" {
   }
 }
 
-resource "aws_launch_configuration" "nomad-servers" {
+resource "aws_launch_configuration" "nomad-server" {
   image_id        = "${data.aws_ami.nomad_ami.id}"
   instance_type   = "${var.instance_type}"
   key_name        = "${var.key_name}"
   security_groups = ["${aws_security_group.nomad.id}"]
-  user_data       = "${template_file.install.rendered}"
+  user_data       = "${template_file.install-server.rendered}"
 }
