@@ -43,18 +43,18 @@ resource "aws_autoscaling_group" "nomad-clients" {
   health_check_type         = "EC2"
   vpc_zone_identifier       = ["${var.subnet}"]
 
+  # load_balancers            = ["${aws_elb.nomad_client.id}"]
+
   tag {
     key                 = "Name"
     value               = "${lookup(var.resource_tags, "ClusterName")}"
     propagate_at_launch = true
   }
-
   tag {
     key                 = "Owner"
     value               = "${lookup(var.resource_tags, "Owner")}"
     propagate_at_launch = true
   }
-
   tag {
     key                 = "TTL"
     value               = "${lookup(var.resource_tags, "TTL")}"
