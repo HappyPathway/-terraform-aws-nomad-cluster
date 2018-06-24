@@ -54,3 +54,13 @@ variable "service_name" {
 variable "service_version" {
   default = "1.0.0"
 }
+
+variable "vault_token" {
+  description = "Vault Token"
+  type        = "string"
+}
+
+variable "vault_cluster" {
+  description = "Vault Cluster Address"
+  type        = "string"
+}
