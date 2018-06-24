@@ -11,7 +11,7 @@ resource "template_file" "install-server" {
   }
 }
 
-data "aws_ami" "nomad_ami" {
+data "aws_ami" "nomad_server_ami" {
   most_recent = true
   owners      = ["753646501470"]
 

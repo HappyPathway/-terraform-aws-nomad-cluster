@@ -11,7 +11,7 @@ resource "template_file" "install-client" {
   }
 }
 
-data "aws_ami" "nomad_ami" {
+data "aws_ami" "nomad_client_ami" {
   most_recent = true
   owners      = ["753646501470"]
 
@@ -63,7 +63,7 @@ resource "aws_autoscaling_group" "nomad-clients" {
 }
 
 resource "aws_launch_configuration" "nomad-clients" {
-  image_id        = "${data.aws_ami.nomad_ami.id}"
+  image_id        = "${data.aws_ami.nomad_client_ami.id}"
   instance_type   = "${var.instance_type}"
   key_name        = "${var.key_name}"
   security_groups = ["${aws_security_group.nomad.id}"]
