@@ -34,7 +34,7 @@ data "aws_ami" "nomad_ami" {
 // We launch Vault into an ASG so that it can properly bring them up for us.
 resource "aws_autoscaling_group" "nomad-servers" {
   name                      = "nomad servers - ${aws_launch_configuration.nomad.name}"
-  launch_configuration      = "${aws_launch_configuration.nomad.name}"
+  launch_configuration      = "${aws_launch_configuration.nomad-server.name}"
   availability_zones        = ["${var.availability_zone}"]
   min_size                  = "${var.servers}"
   max_size                  = "${var.servers}"
