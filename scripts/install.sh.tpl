@@ -80,6 +80,8 @@ vault {
 EOF
 
 # start nomad once it is configured correctly
+mkdir /opt/consul/
+sudo start consul
 sudo start nomad
 
 
