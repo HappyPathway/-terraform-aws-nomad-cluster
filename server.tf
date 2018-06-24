@@ -6,7 +6,7 @@ resource "template_file" "install-server" {
     vault_cluster    = "${var.vault_cluster}"
     vault_token      = "${var.vault_token}"
     nomad_server     = "true"
-    nomad_datacenter = "${lookup(var.resource_tag, "ClusterName")}"
+    nomad_datacenter = "${lookup(var.resource_tags, "ClusterName")}"
     servers          = "${var.servers}"
   }
 }
