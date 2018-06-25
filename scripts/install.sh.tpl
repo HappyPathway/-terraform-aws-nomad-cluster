@@ -1,43 +1,44 @@
 #!/usr/bin/env bash
 set -e
 
+# Setup the configuration
+#consul conf
+hostname=$$(hostname)
+ip_address=$$(ifconfig eth0 | grep "inet addr" | awk '{ print substr($2,6) }')
 
-# Setup the consul init scripts
-cat <<EOF >/tmp/consul_upstart
-description "Consul Agent"
-
-start on runlevel [2345]
-stop on runlevel [!2345]
-
-respawn
-
-script
-  if [ -f "/etc/service/consul" ]; then
-    . /etc/service/consul
-  fi
-
-  # Make sure to use all our CPUs, because Vault can block a scheduler thread
-  export GOMAXPROCS=`nproc`
-  BIND=`ifconfig eth0 | grep "inet addr" | awk '{ print substr($$2,6) }'`
-  exec /usr/local/bin/consul agent \
-    -join=${consul_cluster} \
-    -bind=\$${BIND} \
-    -config-dir="/etc/consul.d" \
-    -data-dir=/opt/consul/data \
-    -client 0.0.0.0 \
-    >>/var/log/consul.log 2>&1
-end script
+cat << EOF > /etc/consul.d/consul-join.hcl
+{
+    "retry_join": ["provider=aws tag_key=ConsulServer tag_value=${env}"]
+}
 EOF
-sudo mv /tmp/consul_upstart /etc/init/consul.conf
 
+cat << EOF > /etc/consul.d/consul-type.json
+{
+  "server": false
+}
+EOF
+
+cat << EOF > /etc/consul.d/consul-node.json
+{
+  "advertise_addr": "$${ip_address}",
+  "node_name": "$${hostname}"
+}
+EOF
+
+cat << EOF > /etc/consul.d/consul-datacenter.json
+{
+  "datacenter": "${datacenter}"
+}
+EOF
 
 # configure nomad to listen on private ip address for rpc and serf
-local_ipv4=`ifconfig eth0 | grep "inet addr" | awk '{ print substr($$2,6) }'`
-echo "advertise {
-  http = \"$${local_ipv4}\"
-  rpc = \"$${local_ipv4}\"
-  serf = \"$${local_ipv4}\"
-}" | tee -a /etc/nomad.d/nomad-default.hcl
+cat << EOF > /etc/nomad.d/nomad-default.hcl
+advertise {
+  http = "$${ip_address}"
+  rpc = "$${ip_address}"
+  serf = "$${ip_address}"
+}
+EOF
 
 # setup nomad client
 if [ "${nomad_client}" == "true" ]
@@ -80,10 +81,17 @@ vault {
 EOF
 
 # start nomad once it is configured correctly
-mkdir /opt/consul/
+export CONSUL_HTTP_ADDR=http://127.0.0.1:8500
+echo 'export CONSUL_HTTP_ADDR=http://127.0.0.1:8500' > /etc/profile.d/consul.sh
+
+# Start Consul
+sudo stop consul
 sudo start consul
-sudo start nomad
+until consul members; do echo "Consul Not Ready" && sleep 10; done
 
 
-
+# Start Nomad
+sudo stop nomad || echo 
+sudo start nomad || echo
+until lsof -i:4646; do echo "Nomad Not Ready" && sleep 10; done
 
