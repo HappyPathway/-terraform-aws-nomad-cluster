@@ -42,6 +42,11 @@ variable "consul_cluster" {
   description = "IP Address of consul cluster bootstrap host"
 }
 
+variable "consul_datacenter" {
+  type        = "string"
+  description = "Consul Datacenter"
+}
+
 variable "region" {
   type        = "string"
   description = "AWS Region"

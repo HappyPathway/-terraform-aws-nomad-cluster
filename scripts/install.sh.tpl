@@ -27,7 +27,7 @@ EOF
 
 cat << EOF > /etc/consul.d/consul-datacenter.json
 {
-  "datacenter": "${datacenter}"
+  "datacenter": "${consul_datacenter}"
 }
 EOF
 

@@ -2,14 +2,15 @@ resource "template_file" "install-client" {
   template = "${file("${path.module}/scripts/install.sh.tpl")}"
 
   vars {
-    consul_cluster   = "${var.consul_cluster}"
-    vault_cluster    = "${var.vault_cluster}"
-    vault_token      = "${var.vault_token}"
-    nomad_client     = "true"
-    nomad_server     = "false"
-    nomad_datacenter = "${lookup(var.resource_tags, "ClusterName")}"
-    servers          = "${var.servers}"
-    env              = "${var.env}"
+    consul_cluster    = "${var.consul_cluster}"
+    vault_cluster     = "${var.vault_cluster}"
+    vault_token       = "${var.vault_token}"
+    nomad_client      = "true"
+    nomad_server      = "false"
+    nomad_datacenter  = "${lookup(var.resource_tags, "ClusterName")}"
+    consul_datacenter = "${var.consul_datacenter}"
+    servers           = "${var.servers}"
+    env               = "${var.env}"
   }
 }
 
