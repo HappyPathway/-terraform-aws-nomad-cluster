@@ -44,10 +44,10 @@ EOF
 if [ "${nomad_client}" == "true" ]
 then
 cat <<EOF> /etc/nomad.d/nomad-client.hcl
+data_dir = "/opt/nomad"
 client {
   enabled         = true
   client_max_port = 15000
-  datacenter = "${nomad_datacenter}"
   options {
     "user.blacklist" = ""
     "docker.cleanup.image"   = "0"
