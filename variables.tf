@@ -69,3 +69,8 @@ variable "env" {
   type        = "string"
   description = "Cluster Environment"
 }
+
+variable "consul_cluster_sg" {
+  type        = "string"
+  description = "Consul Cluster Security Group"
+}
