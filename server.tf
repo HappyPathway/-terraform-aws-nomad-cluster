@@ -76,9 +76,10 @@ resource "aws_autoscaling_group" "nomad-servers" {
 }
 
 resource "aws_launch_configuration" "nomad-server" {
-  image_id        = "${data.aws_ami.nomad_server_ami.id}"
-  instance_type   = "${var.instance_type}"
-  key_name        = "${var.key_name}"
-  security_groups = ["${aws_security_group.nomad.id}"]
-  user_data       = "${template_file.install-server.rendered}"
+  image_id             = "${data.aws_ami.nomad_server_ami.id}"
+  instance_type        = "${var.instance_type}"
+  key_name             = "${var.key_name}"
+  security_groups      = ["${aws_security_group.nomad.id}"]
+  user_data            = "${template_file.install-server.rendered}"
+  iam_instance_profile = "${module.consul_instance_profile.policy}"
 }
