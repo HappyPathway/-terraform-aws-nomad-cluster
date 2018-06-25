@@ -45,6 +45,7 @@ variable "consul_cluster" {
 variable "consul_datacenter" {
   type        = "string"
   description = "Consul Datacenter"
+  default     = "dc1"
 }
 
 variable "region" {
