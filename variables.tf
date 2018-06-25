@@ -4,7 +4,7 @@ variable "availability_zone" {
 }
 
 variable "instance_type" {
-  default     = "m3.medium"
+  default     = "t2.micro"
   description = "Instance type for Vault instances"
 }
 
