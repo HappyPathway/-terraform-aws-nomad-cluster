@@ -9,6 +9,7 @@ resource "template_file" "install-client" {
     nomad_server     = "false"
     nomad_datacenter = "${lookup(var.resource_tags, "ClusterName")}"
     servers          = "${var.servers}"
+    env              = "${var.env}"
   }
 }
 
