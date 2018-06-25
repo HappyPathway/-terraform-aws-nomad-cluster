@@ -61,6 +61,16 @@ resource "aws_autoscaling_group" "nomad-servers" {
     value               = "${lookup(var.resource_tags, "TTL")}"
     propagate_at_launch = true
   }
+  tag {
+    key                 = "Role"
+    value               = "nomad_server"
+    propagate_at_launch = true
+  }
+  tag {
+    key                 = "Env"
+    value               = "${var.env}"
+    propagate_at_launch = true
+  }
 }
 
 resource "aws_launch_configuration" "nomad-server" {

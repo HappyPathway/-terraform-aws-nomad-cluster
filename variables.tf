@@ -64,3 +64,8 @@ variable "vault_cluster" {
   description = "Vault Cluster Address"
   type        = "string"
 }
+
+variable "env" {
+  type        = "string"
+  description = "Cluster Environment"
+}
