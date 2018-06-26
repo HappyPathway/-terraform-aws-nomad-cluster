@@ -11,6 +11,7 @@ resource "template_file" "install-server" {
     servers           = "${var.servers}"
     consul_datacenter = "${var.consul_datacenter}"
     env               = "${var.env}"
+    region            = "${var.region}"
   }
 }
 
