@@ -45,6 +45,8 @@ if [ "${nomad_client}" == "true" ]
 then
 cat <<EOF> /etc/nomad.d/nomad-client.hcl
 data_dir = "/opt/nomad"
+datacenter = "${nomad_datacenter}"
+region = "${region}"
 client {
   enabled         = true
   client_max_port = 15000
